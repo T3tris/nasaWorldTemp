@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+</head>
+<body>
+    <canvas id="myChart" height="600" width="1200"></canvas>
+    <script>
+        const xLabel = [];
+        const yTemp = [];
+
+        getChart();
+
+        async function getChart() {
+            await getData().catch(error => {
+                console.error(error);
+            });
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xLabel,
+                    datasets: [{
+                        label: 'Nasa avrage global temprature',
+                        data: yTemp,
+                        fill:false,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 0.5
+                    }]
+                }
+            });
+        }
+
+        getData();
+
+        async function getData(){
+            const res = await fetch('ZonAnn.Ts.csv');
+            const data = await res.text();
+
+            const rows = data.split('\n').slice(1);
+            rows.forEach(element => {
+                const row = element.split(',');
+                const year = row[0];
+                xLabel.push(year);
+                const temprature = row[1];
+                yTemp.push(parseFloat(temprature) + 14);
+
+                console.log(year, temprature);
+            });
+
+        }
+    </script>
+</body>
+</html>

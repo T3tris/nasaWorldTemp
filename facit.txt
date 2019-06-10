@@ -1,0 +1,21 @@
+
+
+
+        getData().catch(error => {
+            console.error(error);
+        });
+
+        async function getData(){
+            const response = await fetch('ZonAnn.Ts.csv');
+            const data = await response.text();
+
+            const rows = data.split('\n').slice(1);
+            rows.forEach(element => {
+                const row = element.split(',');
+                const year = row[0];
+                xLabel.push(year);
+                const temp = row[1];
+
+                console.log(year, temp);
+            });            
+        }
